@@ -1,0 +1,7 @@
+{
+  "emmet.showSuggestionsAsSnippets": true,
+  "emmet.preferences": {},
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
+}
