@@ -24,11 +24,15 @@ app.use(router);
 // socket working
 
 io.on("connection", (socket) => {
+  console.log("new connection");
+
   // ************************************************************
   // onJoin Chat Room
   //
   socket.on("join", ({ name, room }, callback) => {
+    console.log("new join");
     const { error, user } = addUser({ id: socket.id, name, room });
+    console.log(error);
     if (error) return callback(error);
     socket.emit("message", {
       user: "Chat Bot",
@@ -50,7 +54,13 @@ io.on("connection", (socket) => {
   //
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id);
+    console.log(user, "user");
+    console.log(message);
     io.to(user.room).emit("message", { user: user.name, text: message });
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
     callback();
   });
   //

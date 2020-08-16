@@ -14,11 +14,10 @@ const Chat = ({ location }) => {
   const ENDPOINT = "localhost:7000";
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
-
-    setName(name ?? "bot");
-    setRoom(room ?? "bot");
     socket = io(ENDPOINT);
     socket.emit("join", { name, room }, () => {});
+    setName(name ?? "bot");
+    setRoom(room ?? "bot");
 
     return () => {
       socket.emit("disconnect");
@@ -28,16 +27,10 @@ const Chat = ({ location }) => {
 
   useEffect(() => {
     socket.on("message", (message) => {
+      console.log("message.................", message);
       setMessages([...messages, message]);
     });
   }, [messages]);
-  const handleMessage = (event) => {
-    setMessage(event.target.value);
-  };
-
-  const handleOnKeyPress = (event) => {
-    return event.key === "Enter" ? sendMessage(event) : null;
-  };
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -48,15 +41,15 @@ const Chat = ({ location }) => {
     }
   };
 
-  console.log(message, messages);
   return (
     <div className="outerContainer">
       <div className="container">
         <InfoBar room={room} name={name} />
         <Messages messages={messages} name={name} />
         <Input
-          handleMessage={handleMessage}
-          handleOnKeyPress={handleOnKeyPress}
+          setMessage={setMessage}
+          sendMessage={sendMessage}
+          message={message}
         />
       </div>
     </div>
